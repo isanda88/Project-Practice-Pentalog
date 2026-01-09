@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Soul's Library</title>
+    <link rel="icon" type="image/x-icon" href="assets/Book_25711.ico"/>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i" rel="stylesheet" />
+
+    <style>
+        body {
+            background-image: url("assets/img/books3.jpg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: 'Raleway', sans-serif;
+        }
+
+        table {
+            margin: 20px auto;
+            background-color: white;
+            color: black;
+            border-collapse: collapse;
+            width: 80%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        th, td {
+            border: 2px solid #333;
+            padding: 10px 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+       
+    </style>
+</head>
+<body>
+
+
+<div class="button-bottom">
+
+
+<button class="Btn-Container"
+        onclick="window.location.href='sort_books_by_year.php?sort=asc'">
+    ↑<br>Ascending<br>Sort by Year
+</button>
+
+<button class="Btn-Container"
+        onclick="window.location.href='sort_books_by_year.php?sort=desc'">
+    ↓<br>Descending<br>Sort by Year
+</button>
+
+
+</div>
+
+<style>
+
+.button-bottom {
+    position: fixed;
+    bottom: 20px;        
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;           
+    z-index: 1000;
+}
+
+
+.Btn-Container {
+    width: 140px;
+    height: 80px;
+    border-radius: 40px; /* mai rotunjit, nu cerc perfect */
+    background-color: rgba(161, 35, 35, 1);
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0px 0px 10px rgba(180, 160, 255, 0.5);
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    text-align: center;
+    line-height: 1.2;
+    padding: 10px;
+}
+
+.Btn-Container:hover {
+    background-color: rgb(181, 160, 255);
+    transform: scale(1.05);
+}
+
+
+.svgIcon {
+    width: 24px;
+    height: 24px;
+    fill: white;
+}
+
+
+.btn-bottom {
+    position: fixed;
+    bottom: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    z-index: 1000;
+}
+
+</style>
+
+   
+</div>
+<div>
+
+
+    <style>
+        .btn {
+ display: inline-block;
+ padding: 0.9rem 1.8rem;
+ font-size: 16px;
+ font-weight: 700;
+ color: white;
+ border: 3px solid rgb(252, 70, 100);
+ cursor: pointer;
+ position: relative;
+ background-color: transparent;
+ text-decoration: none;
+ overflow: hidden;
+ z-index: 1;
+ font-family: inherit;
+}
+
+.btn::before {
+ content: "";
+ position: absolute;
+ left: 0;
+ top: 0;
+ width: 100%;
+ height: 100%;
+ background-color: rgb(252, 70, 100);
+ transform: translateX(-100%);
+ transition: all .3s;
+ z-index: -1;
+}
+
+.btn:hover::before {
+ transform: translateX(0);
+}
+    </style>
+
+
+<div class="btn-bottom">
+    <a class="btn" href="authors_db.php">See Author IDs</a>
+    <a class="btn" href="publishers_db.php">See Publisher IDs</a>
+</div>
+
+<a class="btn" href="about_our_collection.html">Home </a>
+
+</body>
+</html>
+
+<?php
+require_once "connection.php";
+$conn = new Connection();
+$pdo = $conn->connect();
+
+$stmt = $pdo -> query("SELECT * FROM books");
+$books = $stmt -> fetchAll(PDO::FETCH_ASSOC);
+
+?>
+
+
+<table border="5">
+    <tr>
+        <th>Title</th>
+        <th>Publication year</th>
+        <th>Author ID</th>
+        <th>Publisher ID</th>
+    </tr>
+
+<?php
+foreach ($books as $b): ?>
+<tr>
+        <td><?= htmlspecialchars($b['title']) ?></td>
+        <td><?= htmlspecialchars($b['publication_year']) ?></td>
+        <td><?= htmlspecialchars($b['author_id']) ?></td>
+        <td><?= htmlspecialchars($b['publisher_id']) ?></td>
+        
+
+    </tr>
+    <?php endforeach; ?>
+
+</table>
+
+
+<?php
+require_once "connection.php";
+$conn = new Connection();
+$pdo = $conn->connect();
+
+
+$sort = 'ASC'; // default
+if (isset($_GET['sort'])) {
+    if ($_GET['sort'] === 'asc') {
+        $sort = 'ASC';
+    } elseif ($_GET['sort'] === 'desc') {
+        $sort = 'DESC';
+    }
+}
+
+
+$stmt = $pdo->query("SELECT * FROM books ORDER BY publication_year $sort");
+$books = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
