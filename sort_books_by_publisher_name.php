@@ -3,8 +3,7 @@ require_once "connection.php";
 $conn = new Connection();
 $pdo = $conn->connect();
 
-
-$sort = 'ASC'; // default
+$sort = 'ASC'; 
 if (isset($_GET['sort'])) {
     if ($_GET['sort'] === 'asc') {
         $sort = 'ASC';
@@ -16,13 +15,6 @@ if (isset($_GET['sort'])) {
 $stmt = $pdo->query("SELECT * FROM publishers ORDER BY name $sort");
 $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
-
-
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -41,9 +33,8 @@ body {
     font-family: 'Raleway', sans-serif;
 }
 
-/* Tabel */
 table {
-    margin: 50px auto 150px auto; /* jos lăsăm spațiu pentru butoane */
+    margin: 50px auto 150px auto; 
     background-color: white;
     color: black;
     border-collapse: collapse;
@@ -72,7 +63,7 @@ th {
     z-index: 1000;
 }
 
-/* Stil butoane mari */
+
 .Btn-Container {
     width: 80px;
     height: 80px;
@@ -87,13 +78,12 @@ th {
     box-shadow: 0px 0px 10px rgba(180, 160, 255, 0.5);
 }
 
-/* Hover efect */
+
 .Btn-Container:hover {
     background-color: rgb(181, 160, 255);
     transform: scale(1.1);
 }
 
-/* SVG stil */
 .svgIcon {
     width: 24px;
     height: 24px;
