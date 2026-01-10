@@ -18,12 +18,6 @@ $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 
-
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,7 +37,7 @@ body {
 
 /* Tabel */
 table {
-    margin: 50px auto 150px auto; /* jos lăsăm spațiu pentru butoane */
+    margin: 50px auto 150px auto; 
     background-color: white;
     color: black;
     border-collapse: collapse;
@@ -72,7 +66,7 @@ th {
     z-index: 1000;
 }
 
-/* Stil butoane mari */
+
 .Btn-Container {
     width: 80px;
     height: 80px;
@@ -87,21 +81,17 @@ th {
     box-shadow: 0px 0px 10px rgba(180, 160, 255, 0.5);
 }
 
-/* Hover efect */
+
 .Btn-Container:hover {
     background-color: rgb(181, 160, 255);
     transform: scale(1.1);
 }
 
-/* SVG stil */
 .svgIcon {
     width: 24px;
     height: 24px;
     fill: white;
 }
-
-
-
 
 
 button {
@@ -171,21 +161,10 @@ button:hover {
 </style>
 
 
-
-
-
-
-
-
-
-
-
-
-
 </head>
 <body>
 
-<!-- From Uiverse.io by Jedi-hongbin --> 
+ 
 <button onclick="window.location.href='authors_db.php'">
   <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
     <path d="M874.690416 495.52477c0 11.2973-9.168824 20.466124-20.466124 20.466124l-604.773963 0 
