@@ -100,7 +100,7 @@ if (!empty($search)) {
 </head>
 <body>
 
-<a class="btn" href="search_a_book.html">Search other book </a>
+<a class="btn" href="search_a_book.html">Search other book</a>
 <?php if (!empty($search)): ?>
 
     <?php if (count($results) > 0): ?>
@@ -128,7 +128,7 @@ if (!empty($search)) {
 
 <?php else: ?>
     <div class="no-results">
-        Please enter a book title to search.
+        Please enter a valid book title to search.
     </div>
 <?php endif; ?>
 
