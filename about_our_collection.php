@@ -3,8 +3,8 @@ require_once "connection.php";
 $conn = new Connection();
 $pdo = $conn->connect();
 
-
-$sort = 'ASC'; // default
+/*verific din link ul url de mai sus*/
+$sort = 'ASC'; /* un fel de pas initial*/
 if (isset($_GET['sort'])) {
     if ($_GET['sort'] === 'asc') {
         $sort = 'ASC';
@@ -12,9 +12,9 @@ if (isset($_GET['sort'])) {
         $sort = 'DESC';
     }
 }
-
+/*ia toate randurile din books si le sorteaza in fuctie de anul publciarii */
 $stmt = $pdo->query("SELECT * FROM books ORDER BY publication_year $sort");
-$books = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$books = $stmt->fetchAll(PDO::FETCH_ASSOC); /*fiecare rand e un array asociativ*/
 ?>
 
 
@@ -138,6 +138,8 @@ $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
 
+
+
 <table border="5">
     <tr> 
         <th>ID</th>
@@ -146,6 +148,7 @@ $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <th>Author ID</th>
         <th>Publisher ID</th>
     </tr>
+<!--se parcurge fiecare rand din tabela si se transpune in tabel b ul e linia curenta-->
     <?php foreach ($books as $b): ?>
     <tr>
         <td><?= htmlspecialchars($b['id']) ?></td>
@@ -157,9 +160,8 @@ $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php endforeach; ?>
 </table>
 
-
 <div class="button-bottom">
-    <button class="Btn-Container" onclick="window.location.href='?sort=asc'">
+    <button class="Btn-Container" onclick="window.location.href='?sort=asc'"> <!--fin linkul url -->
         ↑<br>Ascending<br>Sort by Year
     </button>
     <button class="Btn-Container" onclick="window.location.href='?sort=desc'">
@@ -172,6 +174,6 @@ $books = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <a class="btn" href="publishers_db.php">See Publisher IDs</a>
     <a class="btn" href="about_our_collection.html">Home</a>
 </div>
-
+    <!--butoanele sunt legate de style ul de mai sus-->
 </body>
 </html>

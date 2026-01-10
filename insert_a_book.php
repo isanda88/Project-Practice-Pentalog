@@ -4,21 +4,22 @@ $conn = new Connection();
 $pdo = $conn->connect();
 
 
-
+/*caut in baza de date */
 $authors = $pdo->query("SELECT id, first_name, last_name FROM authors ORDER BY first_name ASC")->fetchAll(PDO::FETCH_ASSOC);
 $publishers = $pdo->query("SELECT id, name FROM publishers ORDER BY name ASC")->fetchAll(PDO::FETCH_ASSOC);
 
-
+/* date citite prin post, valorile transmise e utilizator */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = $_POST['title'];
     $author_id = $_POST['author'];
     $publisher_id = $_POST['publisher'];
     $year = $_POST['year'];
 
+    /*inserare in baza de date*/
     $stmt = $pdo->prepare("INSERT INTO books (title, author_id, publisher_id, publication_year) VALUES (?, ?, ?, ?)");
-   if ($stmt->execute([$title, $author_id, $publisher_id, $year])) {
+    if ($stmt->execute([$title, $author_id, $publisher_id, $year])) {
         
-        header("Location: about_our_collection.php?success=1");
+        header("Location: about_our_collection.php?success=1"); /*cand apas pe submit ma trimite aici cu valoarea nou introdusa */
         exit();
     } else {
         $message = "Error inserting book.";
@@ -36,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://fonts.googleapis.com/css?family=Raleway:400,700" rel="stylesheet">
     <link href="css/styles.css" rel="stylesheet" />
     <style>
+        /*o forma mai simplificata*/
         body { font-family: 'Raleway', sans-serif; background-color: #fdf6f0; padding: 20px; }
         .form-container { max-width: 600px; margin: 50px auto; background: #fff7f0; padding: 30px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
         .form-container h2 { text-align: center; margin-bottom: 20px; color: #d35400; }
@@ -96,6 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <?php if (!empty($message)) echo "<div class='message'>$message</div>"; ?>
 
+<!--prima forma de titlu-->
     <form action="" method="post">
         <div class="form-group">
             <label for="title">A new title</label>
@@ -106,6 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <label for="author">Author</label>
     <select name="author" id="author" required>
         <option value="">Select author...</option>
+<!--citire autori din baza de date -->
         <?php foreach($authors as $author): ?>
             <option value="<?= $author['id'] ?>">
                 <?= htmlspecialchars($author['first_name'] . ' ' . $author['last_name']) ?>
@@ -114,11 +118,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </select>
 </div>
 
-
         <div class="form-group">
             <label for="publisher">Publisher</label>
             <select name="publisher" id="publisher" required>
                 <option value="">Select publisher...</option>
+
+        <!-- citire edituri din baza de date -->
                 <?php foreach($publishers as $publisher): ?>
                     <option value="<?= $publisher['id'] ?>"><?= htmlspecialchars($publisher['name']) ?></option>
                 <?php endforeach; ?>
@@ -127,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="form-group">
             <label for="year">Publication Year</label>
-            <input type="number" name="year" id="year" placeholder="e.g., 2023" required min="1000" max="<?= date('Y') ?>">
+            <input type="number" name="year" id="year" placeholder="e.x., 2026" required min="1000" max="<?= date('Y') ?>">
         </div>
 
         <button type="submit" class="submit-btn">Insert Book</button>

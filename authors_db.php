@@ -1,11 +1,18 @@
+
 <?php
-    require_once "connection.php";
-    $conn = new Connection();
-    $pdo = $conn->connect();
-    $sort = isset($_GET['sort']) && $_GET['sort'] === 'desc' ? 'DESC' : 'ASC';
-    $stmt = $pdo -> query("SELECT * FROM authors");
-    $books = $stmt -> fetchAll(PDO::FETCH_ASSOC);
-    ?>
+require_once "connection.php";
+$conn = new Connection();
+$pdo = $conn->connect();
+
+/*verifica din url daca e sortat sau nu */
+$sort = isset($_GET['sort']) && $_GET['sort'] === 'desc' ? 'DESC' : 'ASC';
+
+$stmt = $pdo->query("SELECT * FROM authors ORDER BY last_name $sort");
+$books = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -179,6 +186,7 @@
 
         <?php foreach ($books as $b): ?>
         <tr>
+        <!-- pentru fiecare rand se transpune in tabela -->
             <td><?= htmlspecialchars($b['id']) ?></td>
             <td><?= htmlspecialchars($b['first_name']) ?></td>
             <td><?= htmlspecialchars($b['last_name']) ?></td>
@@ -187,6 +195,7 @@
         </tr>
         <?php endforeach; ?>
     </table>
+        <!--actiunea apasarii pe butoane si legatura cu url-ul-->
     <div class="button-bottom">
     <button class="Btn-Container" onclick="window.location.href='?sort=asc'">
         <br>Ascending

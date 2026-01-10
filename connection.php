@@ -1,5 +1,6 @@
 <?php
 class Connection{
+    
     public function connect()
     {
         try{
@@ -8,11 +9,9 @@ class Connection{
             $pdo -> setAttribute(
                 PDO::ATTR_ERRMODE,
                 PDO::ERRMODE_EXCEPTION
-             
             );
                return $pdo;
         }
-
         catch(Exception $e){ 
             echo 'eroare' . $e->getMessage();
         }

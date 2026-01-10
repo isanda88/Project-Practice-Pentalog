@@ -4,15 +4,6 @@ $conn = new Connection();
 $pdo = $conn->connect();
 
 
-if (isset($_POST['delete_id'])) {
-    $deleteId = (int)$_POST['delete_id'];
-
-    $stmt = $pdo->prepare("DELETE FROM books WHERE id = :id");
-    $stmt->execute([':id' => $deleteId]);
-
-    header("Location: about_our_collection.php?search=" . urlencode($_POST['search']));
-    exit;
-}
 
 /* search anterior + stergere  */
 $search = "";
@@ -20,7 +11,6 @@ $results = [];
 
 if (isset($_GET['search'])) {
     $search = trim($_GET['search']);
-
     if ($search !== "") {
         $stmt = $pdo->prepare("
             SELECT id, title, publication_year
@@ -33,7 +23,17 @@ if (isset($_GET['search'])) {
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
+
+if (isset($_POST['delete_id'])) {
+    $deleteId = (int)$_POST['delete_id'];
+    $stmt = $pdo->prepare("DELETE FROM books WHERE id = :id");
+    $stmt->execute([':id' => $deleteId]);
+
+    header("Location: about_our_collection.php?search=" . urlencode($_POST['search']));
+    exit;
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -141,9 +141,6 @@ form.example::after {
     </style>
 
 
-
-
-
 </head>
 <body>
 
@@ -155,7 +152,7 @@ form.example::after {
            value="<?= htmlspecialchars($search) ?>">
     <button class="btn" type="submit">Search</button>
 </form>
-
+<!--cat timp am ceva in forma de cautare, se transpune linie cu linie in tabel-->
 <?php if ($search !== ""): ?>
 
     <?php if (count($results) > 0): ?>

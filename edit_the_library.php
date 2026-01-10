@@ -3,7 +3,7 @@ require_once "connection.php";
 $conn = new Connection();
 $pdo = $conn->connect();
 
-// drop down cu editurile
+// drop down cu editurile din baza de date
 $sql = "SELECT id, name FROM publishers ORDER BY name ASC";
 $stmt = $pdo->query($sql);
 $all_publishers = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -13,7 +13,7 @@ $selected_id = isset($_POST['publisher_id']) ? $_POST['publisher_id'] : null;
 $publisher_name = "";
 $success_message = "";
 
-// editura selectata
+// editura selectata din baza de date
 if ($selected_id) {
     $sql = "SELECT * FROM publishers WHERE id = :id";
     $stmt = $pdo->prepare($sql);
@@ -24,7 +24,7 @@ if ($selected_id) {
         die("Editura nu există.");
     }
 
-    $publisher_name = $publisher['name'];
+    $publisher_name = $publisher['name']; /*ce am selectat apare in camp */
 }
 
 // daca am modificat
@@ -37,7 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
         ':name' => $new_name,
         ':id' => $selected_id
     ]);
-
     $success_message = "Editura a fost actualizată cu succes!";
     $publisher_name = $new_name;
 }
@@ -98,6 +97,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                         <div class="container py-5">
                             <h1 class="mb-4 text-center">You can edit the publisher name for a book :) </h1>
 <!-- editura pe care o selectez -->
+
+
                             <?php if ($success_message): ?>
                                 <div class="alert alert-success"><?= htmlspecialchars($success_message) ?></div>
                             <?php endif; ?>
@@ -105,6 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                             <form method="post" class="mb-4">
                                 <div class="mb-3">
                                     <label for="publisher_id" class="form-label">I want to edit the publisher</label>
+                                    
                                     <select name="publisher_id" id="publisher_id" class="form-select" onchange="this.form.submit()">
                                         <option value="">select a publisher... </option>
                                         <?php foreach ($all_publishers as $pub): ?>

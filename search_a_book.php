@@ -3,14 +3,16 @@ require_once "connection.php";
 $conn = new Connection();
 $pdo = $conn->connect();
 
-$search = "";
+$search = ""; /* initial gol */
 
+/*ce am introdus in camp*/ 
 if (isset($_GET['search'])) {
     $search = trim($_GET['search']);
 }
 
 $results = [];
 
+/* preluare din baza de date */
 if (!empty($search)) {
     $sql = "
         SELECT title, publication_year
@@ -103,6 +105,7 @@ if (!empty($search)) {
 <a class="btn" href="search_a_book.html">Search other book</a>
 <?php if (!empty($search)): ?>
 
+<!--in results si row sunt stocate array urile asoc din baza de date-->
     <?php if (count($results) > 0): ?>
         <table>
             <tr>
@@ -116,7 +119,6 @@ if (!empty($search)) {
                     <td><?= htmlspecialchars($row['title']) ?></td>
                     <td><?= htmlspecialchars(string: $row['publication_year']) ?></td>
 
-                    
                 </tr>
             <?php endforeach; ?>
         </table>

@@ -5,8 +5,9 @@ $pdo = $conn->connect();
 
 $sort = isset($_GET['sort']) && $_GET['sort'] === 'desc' ? 'DESC' : 'ASC';
 
-
+/* concatenarea id-urilor din books conform editurilor */
 $stmt = $pdo->query("
+
     SELECT 
         p.id,
         p.name,
@@ -121,7 +122,6 @@ $publishers = $stmt->fetchAll(PDO::FETCH_ASSOC);
             transition: all .3s;
             z-index: -1;
         }
-
         .btn:hover::before {
             transform: translateX(0);
         }
@@ -156,6 +156,7 @@ $publishers = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </tr>
     <?php foreach ($publishers as $p): ?>
         <tr>
+    <!-- transpunerea in tabel  -->
             <td><?= htmlspecialchars($p['id']) ?></td>
             <td><?= htmlspecialchars($p['name']) ?></td>
             <td><?= htmlspecialchars($p['book_ids']) ?></td>
