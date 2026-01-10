@@ -130,22 +130,6 @@ $publishers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
 
 
-<button onclick="window.location.href='about_our_collection.php'">
-    <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-        <path d="M874.69 495.52c0 11.3-9.17 20.47-20.47 20.47l-604.77 0 
-        188.08 188.08c7.99 7.99 7.99 20.95 0 28.94
-        -4 3.99-9.24 5.99-14.47 5.99
-        -5.24 0-10.48-1.99-14.48-5.99
-        l-223-223c-3.83-3.83-5.99-9.04-5.99-14.47
-        0-5.43 2.16-10.63 5.99-14.47
-        l223-223c7.99-7.99 20.96-7.99 28.95 0
-        7.99 8.00 7.99 20.96 0 28.95
-        l-188.07 188.07 604.75 0
-        C865.52 475.06 874.69 484.22 874.69 495.52z"></path>
-    </svg>
-    <span>Back</span>
-</button>
-
 
 <div class="button-bottom">
     <button class="Btn-Container" onclick="window.location.href='?sort=asc'">
