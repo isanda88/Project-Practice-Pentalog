@@ -1,18 +1,35 @@
+<?php
+require_once "connection.php";
+$conn = new Connection();
+$pdo = $conn->connect();
+
+$sort = isset($_GET['sort']) && $_GET['sort'] === 'desc' ? 'DESC' : 'ASC';
+
+
+$stmt = $pdo->query("
+    SELECT 
+        p.id,
+        p.name,
+        (SELECT GROUP_CONCAT(b.id ORDER BY b.id SEPARATOR ',')
+         FROM books b
+         WHERE b.publisher_id = p.id) AS book_ids
+    FROM publishers p
+    ORDER BY p.name $sort
+");
+
+$publishers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Soul's Library</title>
-        <link rel="icon" type="image/x-icon" href="assets/Book_25711.ico"/>
-        <link href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i" rel="stylesheet" />
-
-
-        <style>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Soul's Library</title>
+    <link rel="icon" type="image/x-icon" href="assets/Book_25711.ico"/>
+    <link href="https://fonts.googleapis.com/css?family=Raleway:100,400,700" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700" rel="stylesheet" />
+    <style>
         body {
             background-image: url("assets/img/books3.jpg");
             background-size: cover;
@@ -20,7 +37,6 @@
             background-repeat: no-repeat;
             font-family: 'Raleway', sans-serif;
         }
-
         table {
             margin: 20px auto;
             background-color: white;
@@ -29,60 +45,23 @@
             width: 80%;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-
         th, td {
             border: 2px solid #333;
             padding: 10px 15px;
             text-align: left;
         }
-
         th {
             background-color: #f2f2f2;
         }
-
-/*Buton back*/
-    button {
-    display: flex;
-    height: 3em;
-    width: 100px;
-    align-items: center;
-    justify-content: center;
-    background-color: #eeeeee4b;
-    border-radius: 3px;
-    letter-spacing: 1px;
-    transition: all 0.2s linear;
-    cursor: pointer;
-    border: none;
-    background: #fff;
-    }
-
-    button > svg {
-    margin-right: 5px;
-    margin-left: 5px;
-    font-size: 20px;
-    transition: all 0.4s ease-in;
-    }
-
-    button:hover > svg {
-    font-size: 1.2em;
-    transform: translateX(-5px);
-    }
-
-    button:hover {
-    box-shadow: 9px 9px 33px #d1d1d1, -9px -9px 33px #ffffff;
-    transform: translateY(-2px);
-    }
-    .button-bottom {
-                position: fixed;
-                bottom: 210px;        
-                left: 50%;
-                transform: translateX(-50%);
-                display: flex;
-                gap: 20px;           
-                z-index: 1000;
-            }
-
-/*butoane de jos */
+        .button-bottom {
+            position: fixed;
+            bottom: 210px;        
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;           
+            z-index: 1000;
+        }
         .Btn-Container {
             width: 140px;
             height: 80px;
@@ -103,126 +82,102 @@
             line-height: 1.2;
             padding: 10px;
         }
-
         .Btn-Container:hover {
             background-color: rgb(181, 160, 255);
             transform: scale(1.05);
         }
-
-        .Btn-Container svg {
-            width: 24px;
-            height: 24px;
-            fill: white;
-            margin-bottom: 5px;
-            transition: all 0.3s ease;
+        .btn-bottom {
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
         }
 
-        .Btn-Container:hover svg {
-            transform: scale(1.2);}
-
-         .btn {
-        display: inline-block;
-        padding: 0.9rem 1.8rem;
-        font-size: 16px;
-        font-weight: 700;
-        color: white;
-        border: 3px solid rgb(252, 70, 100);
-        cursor: pointer;
-        position: relative;
-        background-color: transparent;
-        text-decoration: none;
-        overflow: hidden;
-        z-index: 1;
-        font-family: inherit;
+        .btn {
+            display: inline-block;
+            padding: 0.9rem 1.8rem;
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            border: 3px solid rgb(252, 70, 100);
+            cursor: pointer;
+            position: relative;
+            background-color: transparent;
+            text-decoration: none;
+            overflow: hidden;
+            z-index: 1;
+            font-family: inherit;
         }
 
         .btn::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgb(252, 70, 100);
-        transform: translateX(-100%);
-        transition: all .3s;
-        z-index: -1;
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgb(252, 70, 100);
+            transform: translateX(-100%);
+            transition: all .3s;
+            z-index: -1;
         }
 
         .btn:hover::before {
-        transform: translateX(0);
+            transform: translateX(0);
         }
-        
-        
-
     </style>
-    </head>
+</head>
 <body>
 
- <button onclick="window.location.href='about_our_collection.php'">
-  <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-    <path d="M874.690416 495.52477c0 11.2973-9.168824 20.466124-20.466124 20.466124l-604.773963 0 
-    188.083679 188.083679c7.992021 7.992021 7.992021 20.947078 0 28.939099
-    -4.001127 3.990894-9.240455 5.996574-14.46955 5.996574
-    -5.239328 0-10.478655-1.995447-14.479783-5.996574
-    l-223.00912-223.00912c-3.837398-3.837398-5.996574-9.046027-5.996574-14.46955
-    0-5.433756 2.159176-10.632151 5.996574-14.46955
-    l223.019353-223.029586c7.992021-7.992021 20.957311-7.992021 28.949332 0
-    7.992021 8.002254 7.992021 20.957311 0 28.949332
-    l-188.073446 188.073446 604.753497 0
-    C865.521592 475.058646 874.690416 484.217237 874.690416 495.52477z">
-    </path>
-  </svg>
-  <span>Back</span>
+
+<button onclick="window.location.href='about_our_collection.php'">
+    <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+        <path d="M874.69 495.52c0 11.3-9.17 20.47-20.47 20.47l-604.77 0 
+        188.08 188.08c7.99 7.99 7.99 20.95 0 28.94
+        -4 3.99-9.24 5.99-14.47 5.99
+        -5.24 0-10.48-1.99-14.48-5.99
+        l-223-223c-3.83-3.83-5.99-9.04-5.99-14.47
+        0-5.43 2.16-10.63 5.99-14.47
+        l223-223c7.99-7.99 20.96-7.99 28.95 0
+        7.99 8.00 7.99 20.96 0 28.95
+        l-188.07 188.07 604.75 0
+        C865.52 475.06 874.69 484.22 874.69 495.52z"></path>
+    </svg>
+    <span>Back</span>
 </button>
 
 
+<div class="button-bottom">
+    <button class="Btn-Container" onclick="window.location.href='?sort=asc'">
+        Ascending
+        <br>Sort by publisher name
+    </button>
 
-    <div class="button-bottom">
-        <button class="Btn-Container" onclick="window.location.href='sort_books_by_publisher_name.php?sort=asc'">
-            <br>Ascending
-            <br>Sort by publisher name
-        </button>
+    <button class="Btn-Container" onclick="window.location.href='?sort=desc'">
+        Descending
+        <br>Sort by publisher name
+    </button>
+</div>
 
-        <button class="Btn-Container" onclick="window.location.href='sort_books_by_publisher_name.php?sort=desc'">
-            <br>Descending
-            <br>Sort by publisher name
-        </button>
-    </div>
+<div class="btn-bottom">
+    <a class="btn" href="about_our_collection.php">See Books IDs</a>
+    <a class="btn" href="about_our_collection.html">Home</a>
+</div>
 
-
-
-
-</body>
-
-
-<?php
-require_once "connection.php";
-$conn = new Connection();
-$pdo = $conn->connect();
-
-$stmt = $pdo -> query("SELECT * FROM publishers");
-$books = $stmt -> fetchAll(PDO::FETCH_ASSOC);
-
-?>
-
-<body>
 <table border="5">
     <tr>
         <th>ID</th>
         <th>Nume</th>
-        <th>Cărți</th>
-       
+        <th>Cărți (ID-uri)</th>
     </tr>
-
-<?php
-foreach ($books as $b): ?>
-<tr>
-        <td><?= htmlspecialchars(string: $b['id']) ?></td>
-        <td><?= htmlspecialchars($b['name']) ?></td>
-        <td><?= htmlspecialchars($b['books']) ?></td>
-        
-    </tr>
+    <?php foreach ($publishers as $p): ?>
+        <tr>
+            <td><?= htmlspecialchars($p['id']) ?></td>
+            <td><?= htmlspecialchars($p['name']) ?></td>
+            <td><?= htmlspecialchars($p['book_ids']) ?></td>
+        </tr>
     <?php endforeach; ?>
 </table>
+
 </body>
+</html>
