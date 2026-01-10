@@ -90,10 +90,6 @@ th {
     fill: white;
 }
 
-
-
-
-
 button {
  display: flex;
  height: 3em;
@@ -168,7 +164,6 @@ button:hover {
 </head>
 <body>
 
-<!-- From Uiverse.io by Jedi-hongbin --> 
 <button onclick="window.location.href='publishers_db.php'">
   <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
     <path d="M874.690416 495.52477c0 11.2973-9.168824 20.466124-20.466124 20.466124l-604.773963 0 
