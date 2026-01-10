@@ -8,11 +8,10 @@
         <meta name="author" content="" />
         <title>Soul's Library</title>
         <link rel="icon" type="image/x-icon" href="assets/Book_25711.ico"/>
-        <!-- Google fonts-->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i" rel="stylesheet" />
 
-        <!-- <link href="css/styles.css" rel="stylesheet" /> -->
+
         <style>
         body {
             background-image: url("assets/img/books3.jpg");
@@ -41,49 +40,49 @@
             background-color: #f2f2f2;
         }
 
+/*Buton back*/
+    button {
+    display: flex;
+    height: 3em;
+    width: 100px;
+    align-items: center;
+    justify-content: center;
+    background-color: #eeeeee4b;
+    border-radius: 3px;
+    letter-spacing: 1px;
+    transition: all 0.2s linear;
+    cursor: pointer;
+    border: none;
+    background: #fff;
+    }
 
-button {
- display: flex;
- height: 3em;
- width: 100px;
- align-items: center;
- justify-content: center;
- background-color: #eeeeee4b;
- border-radius: 3px;
- letter-spacing: 1px;
- transition: all 0.2s linear;
- cursor: pointer;
- border: none;
- background: #fff;
-}
+    button > svg {
+    margin-right: 5px;
+    margin-left: 5px;
+    font-size: 20px;
+    transition: all 0.4s ease-in;
+    }
 
-button > svg {
- margin-right: 5px;
- margin-left: 5px;
- font-size: 20px;
- transition: all 0.4s ease-in;
-}
+    button:hover > svg {
+    font-size: 1.2em;
+    transform: translateX(-5px);
+    }
 
-button:hover > svg {
- font-size: 1.2em;
- transform: translateX(-5px);
-}
+    button:hover {
+    box-shadow: 9px 9px 33px #d1d1d1, -9px -9px 33px #ffffff;
+    transform: translateY(-2px);
+    }
+    .button-bottom {
+                position: fixed;
+                bottom: 210px;        
+                left: 50%;
+                transform: translateX(-50%);
+                display: flex;
+                gap: 20px;           
+                z-index: 1000;
+            }
 
-button:hover {
- box-shadow: 9px 9px 33px #d1d1d1, -9px -9px 33px #ffffff;
- transform: translateY(-2px);
-}
- .button-bottom {
-            position: fixed;
-            bottom: 210px;        
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 20px;           
-            z-index: 1000;
-        }
-
-        /* Stil butoane */
+/*butoane de jos */
         .Btn-Container {
             width: 140px;
             height: 80px;
@@ -119,9 +118,7 @@ button:hover {
         }
 
         .Btn-Container:hover svg {
-            transform: scale(1.2);
-
-
+            transform: scale(1.2);}
 
          .btn {
         display: inline-block;
@@ -156,15 +153,13 @@ button:hover {
         transform: translateX(0);
         }
         
-
-
-
+        
 
     </style>
     </head>
 <body>
 
- <button onclick="window.location.href='about_our_collection.html'">
+ <button onclick="window.location.href='about_our_collection.php'">
   <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
     <path d="M874.690416 495.52477c0 11.2973-9.168824 20.466124-20.466124 20.466124l-604.773963 0 
     188.083679 188.083679c7.992021 7.992021 7.992021 20.947078 0 28.939099
@@ -211,7 +206,7 @@ $books = $stmt -> fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
-
+<body>
 <table border="5">
     <tr>
         <th>ID</th>
@@ -230,3 +225,4 @@ foreach ($books as $b): ?>
     </tr>
     <?php endforeach; ?>
 </table>
+</body>
