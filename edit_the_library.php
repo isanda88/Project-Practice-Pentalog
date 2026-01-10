@@ -8,7 +8,7 @@ $sql = "SELECT id, name FROM publishers ORDER BY name ASC";
 $stmt = $pdo->query($sql);
 $all_publishers = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Variabile pentru editare
+// variabile pentru editare
 $selected_id = isset($_POST['publisher_id']) ? $_POST['publisher_id'] : null;
 $publisher_name = "";
 $success_message = "";
@@ -43,11 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
 }
 ?>
 
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -81,6 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                         <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="about_our_collection.html">About</a></li>
                         <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="search_a_book.html">Search a book</a></li>
                         <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="edit_the_library.php">Edit the publisher name for a book</a></li>
+                        <li class="nav-item px-lg-4"><a class="nav-link text-uppercase" href="delete_a_book.php">Delete a book</a></li>
                     </ul>
                 </div>
             </div>
@@ -99,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                                
 
                         <div class="container py-5">
-                            <h1 class="mb-4 text-center">Edit Publisher</h1>
+                            <h1 class="mb-4 text-center">You can edit the publisher name for a book :) </h1>
 <!-- editura pe care o selectez -->
                             <?php if ($success_message): ?>
                                 <div class="alert alert-success"><?= htmlspecialchars($success_message) ?></div>
