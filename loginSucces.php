@@ -3,7 +3,7 @@ require_once "connection.php";
 $conn = new Connection();
 $pdo = $conn->connect();
 
-// drop down cu editurile din baza de date
+// PARTEA DE LA EDIT PUBLISHER
 $sql = "SELECT id, name FROM publishers ORDER BY name ASC";
 $stmt = $pdo->query($sql);
 $all_publishers = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -40,7 +40,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
     $success_message = "Editura a fost actualizată cu succes!";
     $publisher_name = $new_name;
 }
+
+
+//PARTEA DE CAUTARE + STERGERE
+
+$search = "";
+$results = [];
+
+if (isset($_GET['search'])) {
+    $search = trim($_GET['search']);
+    if ($search !== "") {
+        $stmt = $pdo->prepare("
+            SELECT id, title, publication_year
+            FROM books
+            WHERE title LIKE :search
+        ");
+        $stmt->execute([
+            ':search' => "%$search%"
+        ]);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+}
+
+if (isset($_POST['delete_id'])) {
+    $deleteId = (int)$_POST['delete_id'];
+    $stmt = $pdo->prepare("DELETE FROM books WHERE id = :id");
+    $stmt->execute([':id' => $deleteId]);
+
+    header("Location: about_our_collection.php?search=" . urlencode($_POST['search']));
+    exit;
+}
+
+//PARTEA DE INSERARE
+
+    $authors = $pdo->query("SELECT id, first_name, last_name FROM authors ORDER BY first_name ASC")->fetchAll(PDO::FETCH_ASSOC);
+    $publishers = $pdo->query("SELECT id, name FROM publishers ORDER BY name ASC")->fetchAll(PDO::FETCH_ASSOC);
+
+/* date citite prin post, valorile transmise e utilizator */
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['insert_book'])) {
+    $title = $_POST['title'];
+    $author_id = $_POST['author'];
+    $publisher_id = $_POST['publisher'];
+    $year = $_POST['year'];
+
+    /*inserare in baza de date*/
+    $stmt = $pdo->prepare("INSERT INTO books (title, author_id, publisher_id, publication_year) VALUES (?, ?, ?, ?)");
+    if ($stmt->execute([$title, $author_id, $publisher_id, $year])) {
+        header("Location: about_our_collection.php?success=1"); 
+        exit();
+    } else {
+        $message = "Error inserting book.";
+    }
+}
+
 ?>
+<!--HTML FINAL; -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -56,8 +110,105 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
         <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
+
+<!--FORMA CAUTARE  -->
+
+        <style>
+            form.example input[type=text] {
+            padding: 20px;
+            font-size: 15px;
+            border: 1px solid grey;
+            float: left;
+            width: 100%;
+            background: #f1f1f1;
+            }
+
+            form.example button {
+            float: left;
+            width: 20%;
+            padding: 10px;
+            background: #2196F3;
+            color: white;
+            font-size: 17px;
+            border: 1px solid grey;
+            border-left: none;
+            cursor: pointer;
+            }
+
+            form.example button:hover {
+            background: #0b7dda;
+            }
+
+            form.example::after {
+            content: "";
+            clear: both;
+            display: table;
+            }
+
+        </style>
+
+
+<!--INSERT STYLE-->
+<style>
+        /*o forma mai simplificata*/
+        body { font-family: 'Raleway', sans-serif; background-color: #fdf6f0; padding: 20px; }
+        .form-container { max-width: 600px; margin: 50px auto; background: #fff7f0; padding: 30px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .form-container h2 { text-align: center; margin-bottom: 20px; color: #d35400; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; }
+        .form-group input:focus, .form-group select:focus { border-color: #d35400; outline: none; }
+        .submit-btn { background-color: #d35400; color: white; padding: 12px 20px; border: none; border-radius: 10px; font-size: 18px; cursor: pointer; width: 100%; }
+        .submit-btn:hover { background-color: #e67e22; }
+        .message { text-align: center; margin-bottom: 15px; font-weight: bold; color: green; }
+
+
+         .btn-bottom {
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.9rem 1.8rem;
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            border: 3px solid rgb(252, 70, 100);
+            cursor: pointer;
+            position: relative;
+            background-color: transparent;
+            text-decoration: none;
+            overflow: hidden;
+            z-index: 1;
+            font-family: inherit;
+        }
+
+        .btn::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgb(252, 70, 100);
+            transform: translateX(-100%);
+            transition: all .3s;
+            z-index: -1;
+        }
+
+        .btn:hover::before {
+            transform: translateX(0);
+        }
+    </style>
+
+
+
     </head>
     <body>
+
         <header>
             <h1 class="site-heading text-center text-faded d-none d-lg-block">
                  <span class="site-heading-upper text-primary mb-3">For your soul every book is very beautiful...</span>
@@ -131,6 +282,152 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                                 </form>
                             <?php endif; ?>
 
+  <!-- CAUTAREA--
+
+<br>
+<br>
+<br>
+<br>
+<h1>You can search a book from our library...</h1>
+<br>
+
+
+
+
+
+
+<!-- forma de search -->
+
+
+ <form class="example" action="search_a_book.php" method="get">
+                                <input type="text" placeholder="Search book title..." name="search" required>
+                                <button type="submit">Search</button>
+                            </form>
+<!--cat timp am ceva in forma de cautare, se transpune linie cu linie in tabel-->
+<?php if ($search !== ""): ?>
+
+    <?php if (count($results) > 0): ?>
+        <table>
+            <tr>
+                <th>Title</th>
+                <th>Year</th>
+                <th>Action</th>
+            </tr>
+
+            <?php foreach ($results as $row): ?>
+                <tr>
+                    <td><?= htmlspecialchars($row['title']) ?></td>
+                    <td><?= htmlspecialchars($row['publication_year']) ?></td>
+                    <td>
+                        <form method="post"
+                              onsubmit="return confirm('Delete this book?');">
+                            <input type="hidden" name="delete_id"
+                                   value="<?= $row['id'] ?>">
+                            <input type="hidden" name="search"
+                                   value="<?= htmlspecialchars($search) ?>">
+                            <button class="btn" type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    <?php else: ?>
+        <div class="no-results">
+            No books found for "<strong><?= htmlspecialchars($search) ?></strong>"
+        </div>
+    <?php endif; ?>
+
+<?php endif; ?>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<div class="form-container">
+    <h2>Insert a new book in our library</h2>
+
+    <form action="" method="post">
+        <input type="hidden" name="insert_book" value="1">
+
+        <div class="form-group">
+            <label for="title">A new title</label>
+            <input type="text" name="title" id="title" placeholder="Enter book title..." required>
+        </div>
+
+        <div class="form-group">
+            <label for="author">Author</label>
+            <select name="author" id="author" required>
+                <option value="">Select author...</option>
+                <?php foreach($authors as $author): ?>
+                    <option value="<?= $author['id'] ?>">
+                        <?= htmlspecialchars($author['first_name'] . ' ' . $author['last_name']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="publisher">Publisher</label>
+            <select name="publisher" id="publisher" required>
+                <option value="">Select publisher...</option>
+                <?php foreach($publishers as $publisher): ?>
+                    <option value="<?= $publisher['id'] ?>"><?= htmlspecialchars($publisher['name']) ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="year">Publication Year</label>
+            <input type="number" name="year" id="year" placeholder="e.x., 2026" required min="1000" max="<?= date('Y') ?>">
+        </div>
+
+        <button type="submit" class="submit-btn">Insert</button>
+    </form>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body>
+
+
+
+
+
+
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         </div>
                         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -154,6 +451,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                 </div>
             </div>
         </section>
+
+
+
+
+
+
+<a class="btn" href="about_our_collection.html">Home</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <section class="page-section about-heading">
             <div class="container">
                 <img class="img-fluid rounded about-heading-img mb-3 mb-lg-0" src="assets/img/about.jpg" alt="..." />
@@ -173,6 +492,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
+
+
     </body>
 </html>
 

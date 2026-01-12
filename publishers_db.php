@@ -11,7 +11,7 @@ $stmt = $pdo->query("
     SELECT 
         p.id,
         p.name,
-        (SELECT GROUP_CONCAT(b.id ORDER BY b.id SEPARATOR ',')
+        (SELECT GROUP_CONCAT(b.title SEPARATOR ',')
          FROM books b
          WHERE b.publisher_id = p.id) AS book_ids
     FROM publishers p

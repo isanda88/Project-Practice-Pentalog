@@ -102,7 +102,7 @@ if (!empty($search)) {
 </head>
 <body>
 
-<a class="btn" href="search_a_book.html">Search other book</a>
+<a class="btn" href="loginSucces.php">Search other book</a>
 <?php if (!empty($search)): ?>
 
 <!--in results si row sunt stocate array urile asoc din baza de date-->

@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $pdo->prepare("INSERT INTO books (title, author_id, publisher_id, publication_year) VALUES (?, ?, ?, ?)");
     if ($stmt->execute([$title, $author_id, $publisher_id, $year])) {
         
-        header("Location: about_our_collection.php?success=1"); /*cand apas pe submit ma trimite aici cu valoarea nou introdusa */
+        header("Location: about_our_collection.php?success=1"); 
         exit();
     } else {
         $message = "Error inserting book.";

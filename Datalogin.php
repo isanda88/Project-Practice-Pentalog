@@ -1,46 +1,4 @@
-<?php
-require_once "connection.php";
-$conn = new Connection();
-$pdo = $conn->connect();
 
-// drop down cu editurile din baza de date
-$sql = "SELECT id, name FROM publishers ORDER BY name ASC";
-$stmt = $pdo->query($sql);
-$all_publishers = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// variabile pentru editare
-$selected_id = isset($_POST['publisher_id']) ? $_POST['publisher_id'] : null;
-$publisher_name = "";
-$success_message = "";
-
-// editura selectata din baza de date
-if ($selected_id) {
-    $sql = "SELECT * FROM publishers WHERE id = :id";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([':id' => $selected_id]);
-    $publisher = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$publisher) {
-        die("Editura nu există.");
-    }
-
-    $publisher_name = $publisher['name']; /*ce am selectat apare in camp */
-}
-
-// daca am modificat
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
-    $new_name = trim($_POST['name']);
-
-    $update = "UPDATE publishers SET name = :name WHERE id = :id";
-    $stmt = $pdo->prepare($update);
-    $stmt->execute([
-        ':name' => $new_name,
-        ':id' => $selected_id
-    ]);
-    $success_message = "Editura a fost actualizată cu succes!";
-    $publisher_name = $new_name;
-}
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -56,6 +14,75 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
         <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
+
+
+        <style>
+        body {font-family: Arial, Helvetica, sans-serif;}
+        form {border: 3px solid #f1f1f1;}
+
+        input[type=text], input[type=password] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        }
+
+        button {
+        background-color: #04AA6D;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        }
+
+        button:hover {
+        opacity: 0.8;
+        }
+
+        .cancelbtn {
+        width: auto;
+        padding: 10px 18px;
+        background-color: #f44336;
+        }
+
+        .imgcontainer {
+        text-align: center;
+        margin: 24px 0 12px 0;
+        }
+
+        img.avatar {
+        width: 40%;
+        border-radius: 50%;
+        }
+
+        .container {
+        padding: 16px;
+        }
+
+        span.psw {
+        float: right;
+        padding-top: 16px;
+        }
+
+        @media screen and (max-width: 300px) {
+        span.psw {
+            display: block;
+            float: none;
+        }
+        .cancelbtn {
+            width: 100%;
+        }
+        }
+        </style>
+
+
+
+
+
     </head>
     <body>
         <header>
@@ -96,40 +123,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'])) {
                                
 
                         <div class="container py-5">
-                            <h1 class="mb-4 text-center">You can edit the publisher name for a book :) </h1>
-<!-- editura pe care o selectez -->
+                            <h1 class="mb-4 text-center">Enter your username and password.</h1>
+<!--forma login -->
 
 
-                            <?php if ($success_message): ?>
-                                <div class="alert alert-success"><?= htmlspecialchars($success_message) ?></div>
-                            <?php endif; ?>
+                        <form action="loginPage.php" method="post">
+                        <div class="imgcontainer">
+                            <img src="assets\icoavatar.jpeg" alt="Avatar" class="avatar">
+                        </div>
 
-                            <form method="post" class="mb-4">
-                                <div class="mb-3">
-                                    <label for="publisher_id" class="form-label">I want to edit the publisher</label>
-                                    
-                                    <select name="publisher_id" id="publisher_id" class="form-select" onchange="this.form.submit()">
-                                        <option value="">select a publisher... </option>
-                                        <?php foreach ($all_publishers as $pub): ?>
-                                            <option value="<?= $pub['id'] ?>" <?= ($pub['id'] == $selected_id) ? 'selected' : '' ?>>
-                                                <?= htmlspecialchars($pub['name']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                            </form>
-<!-- editura modificata -->
-                            <?php if ($selected_id): ?>
-                                <form method="post">
-                                    <input type="hidden" name="publisher_id" value="<?= $selected_id ?>">
-                                    <div class="mb-3">
-                                        <label for="name" class="form-label">Publisher Name</label>
-                                        <input type="text" name="name" id="name" class="form-control" 
-                                            value="<?= htmlspecialchars($publisher_name) ?>" required>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                                </form>
-                            <?php endif; ?>
+                        <div class="container">
+                            <label for="uname"><b>Username</b></label>
+                            <input type="text" placeholder="Enter Username" name="username" required>
+
+                            <label for="psw"><b>Password</b></label>
+                            <input type="password" placeholder="Enter Password" name="password" required>
+                                
+                            <button type="submit">Login</button>
+                            <label>
+                            <input type="checkbox" checked="checked" name="remember"> Remember me
+                            </label>
+                        </div>
+
+
+                        </form>
+
+
+
+
+
+
+
+                            
 
                         </div>
                         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>

@@ -3,8 +3,8 @@ require_once "connection.php";
 $conn = new Connection();
 $pdo = $conn->connect();
 
-/*verific din link ul url de mai sus*/
-$sort = 'ASC'; /* un fel de pas initial*/
+
+$sort = 'ASC'; 
 if (isset($_GET['sort'])) {
     if ($_GET['sort'] === 'asc') {
         $sort = 'ASC';
@@ -14,7 +14,7 @@ if (isset($_GET['sort'])) {
 }
 /*ia toate randurile din books si le sorteaza in fuctie de anul publciarii */
 $stmt = $pdo->query("SELECT * FROM books ORDER BY publication_year $sort");
-$books = $stmt->fetchAll(PDO::FETCH_ASSOC); /*fiecare rand e un array asociativ*/
+$books = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 
