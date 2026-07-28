@@ -68,6 +68,11 @@ The application supports full CRUD functionality:
 
 ---
 
+
+## 📸 Screenshots
+
+assets/img/{93F2762A-AA8A-44E1-AD8F-CA0921768FC1}.png
+
 ## 📊 Sorting
 
 Books can be sorted by:
