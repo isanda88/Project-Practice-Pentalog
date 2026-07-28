@@ -71,7 +71,7 @@ The application supports full CRUD functionality:
 
 ## 📸 Screenshots
 
-![Home Page](assets/img/93F2762A-AA8A-44E1-AD8F-CA0921768FC1.png)
+![Home Page]({93F2762A-AA8A-44E1-AD8F-CA0921768FC1}.png)
 
 ## 📊 Sorting
 
