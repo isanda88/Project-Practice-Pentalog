@@ -61,10 +61,10 @@ Only authenticated administrators can access the management interface.
 
 The application supports full CRUD functionality:
 
-- **Create** – Add new books
-- **Read** – Display all books
-- **Update** – Edit existing books
-- **Delete** – Remove books
+- **Create** - Add new books
+- **Read** - Display all books
+- **Update** - Edit existing books
+- **Delete** - Remove books
 
 ---
 
@@ -97,11 +97,6 @@ During this internship, I gained practical experience with:
 
 ---
 
-## 📸 Screenshots
-
-> Add screenshots of the application here.
-
----
 
 ## 👩‍💻 Author
 
